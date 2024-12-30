@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: event-notificator
+
+server:
+  port: 8081
+  error:
+    include-message: always
+
+springdoc:
+  swagger-ui:
+    url: /event-notificator-openapi.yaml

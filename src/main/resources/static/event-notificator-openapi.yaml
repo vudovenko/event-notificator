@@ -1,0 +1,261 @@
+openapi: 3.0.0
+info:
+  title: Event Notificator API
+  description: API for managing event notifications
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: Notifications
+
+paths:
+  /notifications:
+    get:
+      summary: Получить все непрочитанные нотификации пользователя. Allowed roles=[ADMIN, USER]
+      description: Получить все нотификации пользователя.
+        ID пользователя и его роль должна извлекаться из JWT токена.
+        JWT токен выдается другим сервисом - сервисом event-manager.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Успешно возвращается список нотификаций пользователя
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventChangeNotification'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      tags:
+        - Notifications
+
+    post:
+      summary: Пометить нотификации, как прочитанные. Allowed roles=[ADMIN, USER]
+      description: Пометить переданные нотификации, как прочитанные.
+        Если какая-то нотификация не найдена в БД по ID, то приложение должно игнорировать ее и не падать с ошибкой.
+        ID пользователя и его роль должна извлекаться из JWT токена.
+        JWT токен выдается другим сервисом - сервисом event-manager.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notificationIds:
+                  type: array
+                  items:
+                    type: integer
+                  description: Список ID нотификаций, которые необходимо пометить, как прочитанные
+              required:
+                - notificationIds
+              example:
+                notificationIds: [1, 2, 3, 5, 7, 12]
+      responses:
+        '204':
+          description: Notifications marked as read successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      tags:
+        - Notifications
+
+components:
+  schemas:
+    EventChangeNotification:
+      type: object
+      description: Нотификация с данными об изменении мероприятия, на который записан пользователь
+      properties:
+        eventId:
+          type: integer
+          description: ID мероприятия
+        name:
+          $ref: '#/components/schemas/FieldChangeString'
+        maxPlaces:
+          $ref: '#/components/schemas/FieldChangeInteger'
+        date:
+          $ref: '#/components/schemas/FieldChangeDateTime'
+        cost:
+          $ref: '#/components/schemas/FieldChangeDecimal'
+        duration:
+          $ref: '#/components/schemas/FieldChangeInteger'
+        locationId:
+          $ref: '#/components/schemas/FieldChangeInteger'
+      example:
+        eventId: 10
+        name:
+          oldField: "Лекция Java"
+          newField: "Java семинар"
+        maxPlaces:
+          oldField: 10
+          newField: 100
+        date:
+          oldField: "2024-12-03T10:15:30"
+          newField: "2025-12-13T10:15:30"
+        cost:
+          oldField: 1000
+          newField: 2000
+        duration:
+          oldField: 60
+          newField: 120
+        locationId:
+          oldField: 10
+          newField: 5
+      required:
+        - eventId
+
+    FieldChangeString:
+      type: object
+      properties:
+        oldField:
+          type: string
+          example: "old"
+          description: Старое строковое значение
+        newField:
+          type: string
+          example: "new"
+          description: Новое строковое значение
+
+    FieldChangeInteger:
+      type: object
+      properties:
+        oldField:
+          type: integer
+          example: 10
+          description: Старое целочисленное значение
+        newField:
+          type: integer
+          example: 20
+          description: Новое целочисленное значение
+
+    FieldChangeDateTime:
+      type: object
+      properties:
+        oldField:
+          type: string
+          example: "2024-12-03T10:15:30"
+          description: Старое значение даты. Формат "YYYY-MM-DDThh:mm:ss"
+        newField:
+          type: string
+          example: "2024-12-03T10:15:30"
+          description: Новое значение даты. Формат "YYYY-MM-DDThh:mm:ss"
+
+    FieldChangeDecimal:
+      type: object
+      properties:
+        oldField:
+          type: number
+          example: 10.125
+          description: Старое числовое значение с точкой
+        newField:
+          type: number
+          example: 20.225
+          description: Новое числовое значение с точкой
+
+    ErrorMessageResponse:
+      type: object
+      description: Объект ошибки, возвращаемый в случае возникновения на сервере ошибки.
+        Содержит разное наполнение в зависимости от типа и контекста возникновения ошибки.
+      required:
+        - message
+        - detailedMessage
+        - dateTime
+      example:
+        message: "Сообщение об ошибке"
+        detailedMessage: "Более детальное сообщение об ошибке"
+        dateTime: "2024-12-03T10:15:30"
+      properties:
+        message:
+          type: string
+          description: Человеко-читаемое сообщение об ошибке
+        detailedMessage:
+          type: string
+          description: Более детальное сообщение об ошибке. Например, содержимое exception
+        dateTime:
+          type: string
+          format: date-time
+          description: Дата и время возникновения ошибки. Формат "YYYY-MM-DDThh:mm:ss"
+
+  responses:
+    BadRequest:
+      description: Запрос с невалидными данными.
+        Например, попытка занять занятый логин или некорректные параметры запроса.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessageResponse'
+          example:
+            message: "Некорректный запрос"
+            detailedMessage: "Более детальное сообщение об ошибке"
+            dateTime: "2024-12-03T10:15:30"
+
+    Unauthorized:
+      description: Аутентификация отсутствует или не удалась
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessageResponse'
+          example:
+            message: "Необходима аутентификация"
+            detailedMessage: "Более детальное сообщение об ошибке"
+            dateTime: "2024-12-03T10:15:30"
+
+    Forbidden:
+      description: У пользователя недостаточно прав для выполнения этой операции
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessageResponse'
+          example:
+            message: "Недостаточно прав для выполнения операции"
+            detailedMessage: "Более детальное сообщение об ошибке"
+            dateTime: "2024-12-03T10:15:30"
+
+    NotFound:
+      description: Сущность не найдена.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessageResponse'
+          example:
+            message: "Сущность не найдена"
+            detailedMessage: "Более детальное сообщение об ошибке"
+            dateTime: "2024-12-03T10:15:30"
+
+    ServerError:
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessageResponse'
+          example:
+            message: "Внутренняя ошибка сервера"
+            detailedMessage: "Более детальное сообщение об ошибке"
+            dateTime: "2024-12-03T10:15:30"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
