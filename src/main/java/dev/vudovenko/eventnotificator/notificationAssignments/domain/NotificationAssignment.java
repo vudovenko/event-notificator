@@ -13,4 +13,5 @@ public class NotificationAssignment {
     private Long id;
     private Long notificationId;
     private Long userId;
+    private Boolean isRead;
 }

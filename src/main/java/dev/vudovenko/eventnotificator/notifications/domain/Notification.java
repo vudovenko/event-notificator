@@ -18,7 +18,6 @@ public class Notification {
     private Long modifiedBy;
     private Long eventOwnerId;
     private LocalDateTime notificationCreatedAt;
-    private Boolean isRead;
     FieldChangeString name;
     FieldChangeInteger maxPlaces;
     FieldChangeDateTime date;
@@ -26,8 +25,4 @@ public class Notification {
     FieldChangeInteger duration;
     FieldChangeLong locationId;
     FieldChangeStatus status;
-
-    public Notification(Long id) {
-        this.id = id;
-    }
 }

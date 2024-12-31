@@ -32,9 +32,6 @@ public class NotificationEntity {
     @Column(name = "notification_created_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime notificationCreatedAt;
 
-    @Column(name = "is_read")
-    private Boolean isRead;
-
     @Column(name = "old_name")
     private String oldName;
 

@@ -19,7 +19,6 @@ public class NotificationEntityMapper implements EntityMapper<Notification, Noti
                 notification.getModifiedBy(),
                 notification.getEventOwnerId(),
                 notification.getNotificationCreatedAt(),
-                notification.getIsRead(),
                 notification.getName().oldField(),
                 notification.getName().newField(),
                 notification.getMaxPlaces().oldField(),
@@ -45,7 +44,6 @@ public class NotificationEntityMapper implements EntityMapper<Notification, Noti
                 notificationEntity.getModifiedBy(),
                 notificationEntity.getEventOwnerId(),
                 notificationEntity.getNotificationCreatedAt(),
-                notificationEntity.getIsRead(),
                 new FieldChangeString(
                         notificationEntity.getOldName(),
                         notificationEntity.getNewName()

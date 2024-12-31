@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface NotificationService {
 
+    Notification createNotification(Notification domain);
+
     List<Notification> getUnreadNotifications(String login);
 }
