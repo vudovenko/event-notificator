@@ -22,6 +22,17 @@ public class JwtTokenManager {
         this.expirationTime = expirationTime;
     }
 
+    public Long getUserIdFromToken(String jwt) {
+        Long userId = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(jwt)
+                .getPayload()
+                .get("userId", Long.class);
+
+        return userId;
+    }
+
     public String getLoginFromToken(String jwt) {
         return Jwts.parser()
                 .verifyWith(key)

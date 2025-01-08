@@ -4,6 +4,7 @@ import dev.vudovenko.eventnotificator.security.jwt.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -35,6 +36,9 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
+                                .requestMatchers(HttpMethod.GET, "/notifications")
+                                .hasAnyAuthority("ADMIN", "USER")
+
                                 .anyRequest()
                                 .authenticated()
                 )
@@ -66,7 +70,7 @@ public class SecurityConfiguration {
                         "/swagger-ui.html",
                         "/webjars/**",
                         "/v3/api-docs/swagger-config",
-                        "/event-manager-openapi.yaml"
+                        "/event-notificator-openapi.yaml"
                 );
     }
 }

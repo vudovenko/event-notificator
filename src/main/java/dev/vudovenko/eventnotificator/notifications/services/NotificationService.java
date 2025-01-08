@@ -8,5 +8,5 @@ public interface NotificationService {
 
     Notification createNotification(Notification domain);
 
-    List<Notification> getUnreadNotifications(String login);
+    List<Notification> getUnreadNotifications(Long userId);
 }

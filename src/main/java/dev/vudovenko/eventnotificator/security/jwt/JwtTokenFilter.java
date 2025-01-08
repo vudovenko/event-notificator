@@ -47,12 +47,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        String loginFromToken = jwtTokenManager.getLoginFromToken(jwtToken);
-        UserRole roleFromToken = jwtTokenManager.getRoleFromToken(jwtToken);
-        User user = new User(
-                loginFromToken,
-                roleFromToken
-        );
+        User user = getUserFromToken(jwtToken);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 user,
@@ -62,5 +57,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
+    }
+
+    private User getUserFromToken(String jwtToken) {
+        Long userId = jwtTokenManager.getUserIdFromToken(jwtToken);
+        String loginFromToken = jwtTokenManager.getLoginFromToken(jwtToken);
+        UserRole roleFromToken = jwtTokenManager.getRoleFromToken(jwtToken);
+
+        return new User(
+                userId,
+                loginFromToken,
+                roleFromToken
+        );
     }
 }

@@ -11,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 public class User {
 
+    private Long id;
     private String login;
     private UserRole role;
 }

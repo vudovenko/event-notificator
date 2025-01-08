@@ -27,14 +27,14 @@ public class NotificationKafkaListener {
     ) {
         log.info("event change received: {}", record.value());
 
-        notificationService.createNotification(
+        Notification notification = notificationService.createNotification(
                 EventChangeDtoToEntityMapper.toDomain(record.value())
         );
 
         record.value().participants().forEach(
                 participantId -> {
                     notificationAssignmentService.assignNotification(
-                            record.value().eventId(),
+                            notification.getId(),
                             participantId
                     );
                 }

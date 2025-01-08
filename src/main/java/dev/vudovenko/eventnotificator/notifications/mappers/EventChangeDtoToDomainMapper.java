@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-public class EventChangeDtoToEntityMapper implements ToDomainMapper<Notification, EventChangeDto> {
+public class EventChangeDtoToDomainMapper implements ToDomainMapper<Notification, EventChangeDto> {
 
     @Override
     public Notification toDomain(EventChangeDto eventChangeDto) {

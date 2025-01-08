@@ -1,5 +1,6 @@
 package dev.vudovenko.eventnotificator.notifications.controllers;
 
+import dev.vudovenko.eventnotificator.common.mappers.ToDtoMapper;
 import dev.vudovenko.eventnotificator.events.changes.dto.EventChangeNotification;
 import dev.vudovenko.eventnotificator.notifications.domain.Notification;
 import dev.vudovenko.eventnotificator.notifications.services.NotificationService;
@@ -21,17 +22,22 @@ import java.util.List;
 public class NotificationController {
 
     private final NotificationService notificationService;
+    private final ToDtoMapper<Notification, EventChangeNotification> notificationToEventChangeNotificationMapper;
 
     @GetMapping
-    public ResponseEntity<EventChangeNotification> getUnreadNotifications(
+    public ResponseEntity<List<EventChangeNotification>> getUnreadNotifications(
             @AuthenticationPrincipal User user
     ) {
         log.info("Get request for unread notifications");
 
         List<Notification> notifications = notificationService.getUnreadNotifications(
-                user.getLogin()
+                user.getId()
         );
 
-        throw new UnsupportedOperationException("Not implemented yet");
+        List<EventChangeNotification> eventChangeNotifications = notifications.stream()
+                .map(notificationToEventChangeNotificationMapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(eventChangeNotifications);
     }
 }

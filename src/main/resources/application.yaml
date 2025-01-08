@@ -8,15 +8,31 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
 
 server:
-  port: 8081
+  port: 8080
   error:
     include-message: always
+
+logging:
+  level:
+    dev.vudovenko.eventnotificator: info
+    org:
+      springframework: info
+      hibernate:
+        orm:
+          jdbc:
+            bind: trace
+            extract: trace
+        type:
+          descriptor:
+            sql: trace
+  pattern:
+    console: "%C{1.} [%-5level] %d{yyyy-MM-dd HH:mm:ss} [%t] - %msg%n"
 
 springdoc:
   swagger-ui:
