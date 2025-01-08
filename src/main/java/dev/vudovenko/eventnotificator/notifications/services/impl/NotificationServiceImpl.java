@@ -36,12 +36,12 @@ public class NotificationServiceImpl implements NotificationService {
         List<NotificationEntity> unreadNotifications
                 = notificationRepository.getUnreadNotificationsByUserId(userId);
 
-        notificationAssignmentRepository.markNotificationsAsRead(
+        /*notificationAssignmentRepository.markNotificationsAsRead(
                 userId,
                 unreadNotifications.stream()
                         .map(NotificationEntity::getId)
                         .toList()
-        );
+        );*/
 
         return unreadNotifications.stream()
                 .map(notificationEntityMapper::toDomain)

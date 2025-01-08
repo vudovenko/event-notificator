@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Log4j2
@@ -36,6 +37,7 @@ public class NotificationController {
 
         List<EventChangeNotification> eventChangeNotifications = notifications.stream()
                 .map(notificationToEventChangeNotificationMapper::toDto)
+                .sorted(Comparator.comparingLong(EventChangeNotification::eventId))
                 .toList();
 
         return ResponseEntity.ok(eventChangeNotifications);
