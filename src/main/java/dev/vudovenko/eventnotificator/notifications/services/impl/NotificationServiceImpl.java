@@ -30,21 +30,22 @@ public class NotificationServiceImpl implements NotificationService {
         return notificationEntityMapper.toDomain(notificationEntity);
     }
 
-    @Transactional
     @Override
     public List<Notification> getUnreadNotifications(Long userId) {
         List<NotificationEntity> unreadNotifications
                 = notificationRepository.getUnreadNotificationsByUserId(userId);
 
-        /*notificationAssignmentRepository.markNotificationsAsRead(
-                userId,
-                unreadNotifications.stream()
-                        .map(NotificationEntity::getId)
-                        .toList()
-        );*/
-
         return unreadNotifications.stream()
                 .map(notificationEntityMapper::toDomain)
                 .toList();
+    }
+
+    @Transactional
+    @Override
+    public void markNotificationsAsRead(Long userId, List<Long> notificationIds) {
+        notificationAssignmentRepository.markNotificationsAsRead(
+                userId,
+                notificationIds
+        );
     }
 }

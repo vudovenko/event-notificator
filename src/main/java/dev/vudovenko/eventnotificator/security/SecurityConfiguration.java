@@ -38,6 +38,8 @@ public class SecurityConfiguration {
                         authorizeHttpRequests
                                 .requestMatchers(HttpMethod.GET, "/notifications")
                                 .hasAnyAuthority("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.POST, "/notifications")
+                                .hasAnyAuthority("ADMIN", "USER")
 
                                 .anyRequest()
                                 .authenticated()

@@ -9,4 +9,6 @@ public interface NotificationService {
     Notification createNotification(Notification domain);
 
     List<Notification> getUnreadNotifications(Long userId);
+
+    void markNotificationsAsRead(Long userId, List<Long> notificationIds);
 }
