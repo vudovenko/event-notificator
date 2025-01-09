@@ -1,6 +1,7 @@
 package dev.vudovenko.eventnotificator.notifications.domain;
 
 import dev.vudovenko.eventnotificator.events.changes.dto.*;
+import dev.vudovenko.eventnotificator.events.statuses.EventStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,11 +19,11 @@ public class Notification {
     private Long modifiedBy;
     private Long eventOwnerId;
     private LocalDateTime notificationCreatedAt;
-    FieldChangeString name;
-    FieldChangeInteger maxPlaces;
-    FieldChangeDateTime date;
-    FieldChangeInteger cost;
-    FieldChangeInteger duration;
-    FieldChangeLong locationId;
-    FieldChangeStatus status;
+    FieldChange<String> name;
+    FieldChange<Integer> maxPlaces;
+    FieldChange<LocalDateTime> date;
+    FieldChange<Integer> cost;
+    FieldChange<Integer> duration;
+    FieldChange<Long> locationId;
+    FieldChange<EventStatus> status;
 }

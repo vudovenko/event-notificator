@@ -44,31 +44,31 @@ public class NotificationEntityMapper implements EntityMapper<Notification, Noti
                 notificationEntity.getModifiedBy(),
                 notificationEntity.getEventOwnerId(),
                 notificationEntity.getNotificationCreatedAt(),
-                new FieldChangeString(
+                new FieldChange<>(
                         notificationEntity.getOldName(),
                         notificationEntity.getNewName()
                 ),
-                new FieldChangeInteger(
+                new FieldChange<>(
                         notificationEntity.getOldMaxPlaces(),
                         notificationEntity.getNewMaxPlaces()
                 ),
-                new FieldChangeDateTime(
+                new FieldChange<>(
                         notificationEntity.getOldDate(),
                         notificationEntity.getNewDate()
                 ),
-                new FieldChangeInteger(
+                new FieldChange<>(
                         notificationEntity.getOldCost(),
                         notificationEntity.getNewCost()
                 ),
-                new FieldChangeInteger(
+                new FieldChange<>(
                         notificationEntity.getOldDuration(),
                         notificationEntity.getNewDuration()
                 ),
-                new FieldChangeLong(
+                new FieldChange<>(
                         notificationEntity.getOldLocationId(),
                         notificationEntity.getNewLocationId()
                 ),
-                new FieldChangeStatus(
+                new FieldChange<>(
                         notificationEntity.getOldStatus(),
                         notificationEntity.getNewStatus()
                 )

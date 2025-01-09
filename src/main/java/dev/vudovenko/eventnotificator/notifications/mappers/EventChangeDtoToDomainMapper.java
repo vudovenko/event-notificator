@@ -18,31 +18,31 @@ public class EventChangeDtoToDomainMapper implements ToDomainMapper<Notification
                 eventChangeDto.modifiedBy(),
                 eventChangeDto.ownerId(),
                 LocalDateTime.now(),
-                new FieldChangeString(
+                new FieldChange<>(
                         eventChangeDto.name().oldField(),
                         eventChangeDto.name().newField()
                 ),
-                new FieldChangeInteger(
+                new FieldChange<>(
                         eventChangeDto.maxPlaces().oldField(),
                         eventChangeDto.maxPlaces().newField()
                 ),
-                new FieldChangeDateTime(
+                new FieldChange<>(
                         eventChangeDto.date().oldField(),
                         eventChangeDto.date().newField()
                 ),
-                new FieldChangeInteger(
+                new FieldChange<>(
                         eventChangeDto.cost().oldField(),
                         eventChangeDto.cost().newField()
                 ),
-                new FieldChangeInteger(
+                new FieldChange<>(
                         eventChangeDto.duration().oldField(),
                         eventChangeDto.duration().newField()
                 ),
-                new FieldChangeLong(
+                new FieldChange<>(
                         eventChangeDto.locationId().oldField(),
                         eventChangeDto.locationId().newField()
                 ),
-                new FieldChangeStatus(
+                new FieldChange<>(
                         eventChangeDto.status().oldField(),
                         eventChangeDto.status().newField()
                 )
