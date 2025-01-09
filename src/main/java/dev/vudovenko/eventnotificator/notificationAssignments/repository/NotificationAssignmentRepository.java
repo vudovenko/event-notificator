@@ -19,4 +19,13 @@ public interface NotificationAssignmentRepository extends JpaRepository<Notifica
                     """
     )
     void markNotificationsAsRead(Long userId, List<Long> notificationIds);
+
+    @Modifying
+    @Query(
+            """
+                    DELETE NotificationAssignmentEntity na
+                    WHERE na.notificationId IN :notificationIds
+                    """
+    )
+    void deleteByNotificationIdIn(List<Long> notificationIds);
 }

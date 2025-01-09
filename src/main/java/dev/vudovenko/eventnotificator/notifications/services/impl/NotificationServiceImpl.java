@@ -48,4 +48,9 @@ public class NotificationServiceImpl implements NotificationService {
                 notificationIds
         );
     }
+
+    @Override
+    public void deleteAll(List<Long> notificationIds) {
+        notificationRepository.deleteAllByIdInBatch(notificationIds);
+    }
 }
