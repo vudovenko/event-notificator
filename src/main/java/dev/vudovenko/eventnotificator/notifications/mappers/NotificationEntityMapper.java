@@ -1,77 +1,236 @@
 package dev.vudovenko.eventnotificator.notifications.mappers;
 
 import dev.vudovenko.eventnotificator.common.mappers.EntityMapper;
-import dev.vudovenko.eventnotificator.events.changes.dto.*;
+import dev.vudovenko.eventnotificator.events.changes.dto.FieldChange;
+import dev.vudovenko.eventnotificator.events.statuses.EventStatus;
+import dev.vudovenko.eventnotificator.notificationChanges.domain.NotificationChange;
+import dev.vudovenko.eventnotificator.notificationChanges.entity.NotificationChangeEntity;
+import dev.vudovenko.eventnotificator.notificationChanges.fieldNames.FieldName;
 import dev.vudovenko.eventnotificator.notifications.domain.Notification;
 import dev.vudovenko.eventnotificator.notifications.entities.NotificationEntity;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class NotificationEntityMapper implements EntityMapper<Notification, NotificationEntity> {
 
+    private final EntityMapper<NotificationChange, NotificationChangeEntity> notificationChangeEntityMapper;
+
     @Override
     public NotificationEntity toEntity(Notification notification) {
-        return new NotificationEntity(
+        NotificationEntity notificationEntity = new NotificationEntity(
                 notification.getId(),
                 notification.getEventId(),
                 notification.getModifiedBy(),
                 notification.getEventOwnerId(),
                 notification.getNotificationCreatedAt(),
-                notification.getName().oldField(),
-                notification.getName().newField(),
-                notification.getMaxPlaces().oldField(),
-                notification.getMaxPlaces().newField(),
-                notification.getDate().oldField(),
-                notification.getDate().newField(),
-                notification.getCost().oldField(),
-                notification.getCost().newField(),
-                notification.getDuration().oldField(),
-                notification.getDuration().newField(),
-                notification.getLocationId().oldField(),
-                notification.getLocationId().newField(),
-                notification.getStatus().oldField(),
-                notification.getStatus().newField()
+                List.of()
+        );
+
+        List<NotificationChangeEntity> changes = new ArrayList<>();
+
+        if (notification.getName() != null) {
+            changes.add(
+                    createChangeEntity(
+                            notificationEntity.getId(),
+                            FieldName.NAME,
+                            notification.getName().oldField(),
+                            notification.getName().newField()
+                    )
+            );
+        }
+
+        // 2) maxPlaces
+        if (notification.getMaxPlaces() != null) {
+            changes.add(
+                    createChangeEntity(
+                            notificationEntity.getId(),
+                            FieldName.MAX_PLACES,
+                            notification.getMaxPlaces().oldField(),
+                            notification.getMaxPlaces().newField()
+                    )
+            );
+        }
+
+        // 3) date
+        if (notification.getDate() != null) {
+            changes.add(
+                    createChangeEntity(
+                            notificationEntity.getId(),
+                            FieldName.DATE,
+                            notification.getDate().oldField(),
+                            notification.getDate().newField()
+                    )
+            );
+        }
+
+        // 4) cost
+        if (notification.getCost() != null) {
+            changes.add(
+                    createChangeEntity(
+                            notificationEntity.getId(),
+                            FieldName.COST,
+                            notification.getCost().oldField(),
+                            notification.getCost().newField()
+                    )
+            );
+        }
+
+        // 5) duration
+        if (notification.getDuration() != null) {
+            changes.add(
+                    createChangeEntity(
+                            notificationEntity.getId(),
+                            FieldName.DURATION,
+                            notification.getDuration().oldField(),
+                            notification.getDuration().newField()
+                    )
+            );
+        }
+
+        // 6) locationId
+        if (notification.getLocationId() != null) {
+            changes.add(
+                    createChangeEntity(
+                            notificationEntity.getId(),
+                            FieldName.LOCATION_ID,
+                            notification.getLocationId().oldField(),
+                            notification.getLocationId().newField()
+                    )
+            );
+        }
+
+        // 7) status
+        if (notification.getStatus() != null) {
+            changes.add(
+                    createChangeEntity(
+                            notificationEntity.getId(),
+                            FieldName.STATUS,
+                            notification.getStatus().oldField() != null
+                                    ? notification.getStatus().oldField().name()
+                                    : null,
+                            notification.getStatus().newField() != null
+                                    ? notification.getStatus().newField().name()
+                                    : null
+                    )
+            );
+        }
+
+        notificationEntity.setFieldChanges(changes);
+
+        return notificationEntity;
+    }
+
+    private NotificationChangeEntity createChangeEntity(
+            Long notificationId,
+            FieldName fieldName,
+            Object oldValue,
+            Object newValue
+    ) {
+        return new NotificationChangeEntity(
+                null,
+                notificationId,
+                fieldName,
+                oldValue != null ? oldValue.toString() : null,
+                newValue != null ? newValue.toString() : null
         );
     }
 
     @Override
     public Notification toDomain(NotificationEntity notificationEntity) {
+        Map<FieldName, NotificationChange> fieldChanges =
+                Hibernate.isInitialized(notificationEntity.getFieldChanges())
+                        ? notificationEntity.getFieldChanges().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        NotificationChangeEntity::getFieldName,
+                                        notificationChangeEntityMapper::toDomain
+                                )
+                        )
+                        : Collections.emptyMap();
         return new Notification(
                 notificationEntity.getId(),
                 notificationEntity.getEventId(),
                 notificationEntity.getModifiedBy(),
                 notificationEntity.getEventOwnerId(),
                 notificationEntity.getNotificationCreatedAt(),
-                new FieldChange<>(
-                        notificationEntity.getOldName(),
-                        notificationEntity.getNewName()
-                ),
-                new FieldChange<>(
-                        notificationEntity.getOldMaxPlaces(),
-                        notificationEntity.getNewMaxPlaces()
-                ),
-                new FieldChange<>(
-                        notificationEntity.getOldDate(),
-                        notificationEntity.getNewDate()
-                ),
-                new FieldChange<>(
-                        notificationEntity.getOldCost(),
-                        notificationEntity.getNewCost()
-                ),
-                new FieldChange<>(
-                        notificationEntity.getOldDuration(),
-                        notificationEntity.getNewDuration()
-                ),
-                new FieldChange<>(
-                        notificationEntity.getOldLocationId(),
-                        notificationEntity.getNewLocationId()
-                ),
-                new FieldChange<>(
-                        notificationEntity.getOldStatus(),
-                        notificationEntity.getNewStatus()
-                )
+
+                // name
+                makeFieldChangeString(fieldChanges.get(FieldName.NAME)),
+
+                // maxPlaces
+                makeFieldChangeInteger(fieldChanges.get(FieldName.MAX_PLACES)),
+
+                // date
+                makeFieldChangeLocalDateTime(fieldChanges.get(FieldName.DATE)),
+
+                // cost
+                makeFieldChangeInteger(fieldChanges.get(FieldName.COST)),
+
+                // duration
+                makeFieldChangeInteger(fieldChanges.get(FieldName.DURATION)),
+
+                // locationId
+                makeFieldChangeLong(fieldChanges.get(FieldName.LOCATION_ID)),
+
+                // status
+                makeFieldChangeEventStatus(fieldChanges.get(FieldName.STATUS))
+        );
+    }
+
+    private FieldChange<String> makeFieldChangeString(NotificationChange change) {
+        if (change == null) {
+            return null;
+        }
+        return new FieldChange<>(change.getOldValue(), change.getNewValue());
+    }
+
+    private FieldChange<Integer> makeFieldChangeInteger(NotificationChange change) {
+        if (change == null) {
+            return null;
+        }
+        return new FieldChange<>(
+                change.getOldValue() != null ? Integer.valueOf(change.getOldValue()) : null,
+                change.getNewValue() != null ? Integer.valueOf(change.getNewValue()) : null
+        );
+    }
+
+    private FieldChange<Long> makeFieldChangeLong(NotificationChange change) {
+        if (change == null) {
+            return null;
+        }
+        return new FieldChange<>(
+                change.getOldValue() != null ? Long.valueOf(change.getOldValue()) : null,
+                change.getNewValue() != null ? Long.valueOf(change.getNewValue()) : null
+        );
+    }
+
+    private FieldChange<LocalDateTime> makeFieldChangeLocalDateTime(NotificationChange change) {
+        if (change == null) {
+            return null;
+        }
+        return new FieldChange<>(
+                change.getOldValue() != null ? LocalDateTime.parse(change.getOldValue()) : null,
+                change.getNewValue() != null ? LocalDateTime.parse(change.getNewValue()) : null
+        );
+    }
+
+    private FieldChange<EventStatus> makeFieldChangeEventStatus(NotificationChange change) {
+        if (change == null) {
+            return null;
+        }
+        return new FieldChange<>(
+                change.getOldValue() != null ? EventStatus.valueOf(change.getOldValue()) : null,
+                change.getNewValue() != null ? EventStatus.valueOf(change.getNewValue()) : null
         );
     }
 }

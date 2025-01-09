@@ -1,10 +1,11 @@
 package dev.vudovenko.eventnotificator.notifications.entities;
 
-import dev.vudovenko.eventnotificator.events.statuses.EventStatus;
+import dev.vudovenko.eventnotificator.notificationChanges.entity.NotificationChangeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,47 +33,8 @@ public class NotificationEntity {
     @Column(name = "notification_created_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime notificationCreatedAt;
 
-    @Column(name = "old_name")
-    private String oldName;
-
-    @Column(name = "new_name")
-    private String newName;
-
-    @Column(name = "old_max_places")
-    private Integer oldMaxPlaces;
-
-    @Column(name = "new_max_places")
-    private Integer newMaxPlaces;
-
-    @Column(name = "old_date", columnDefinition = "TIMESTAMP")
-    private LocalDateTime oldDate;
-
-    @Column(name = "new_date", columnDefinition = "TIMESTAMP")
-    private LocalDateTime newDate;
-
-    @Column(name = "old_cost")
-    private Integer oldCost;
-
-    @Column(name = "new_cost")
-    private Integer newCost;
-
-    @Column(name = "old_duration")
-    private Integer oldDuration;
-
-    @Column(name = "new_duration")
-    private Integer newDuration;
-
-    @Column(name = "old_location_id")
-    private Long oldLocationId;
-
-    @Column(name = "new_location_id")
-    private Long newLocationId;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "old_status")
-    private EventStatus oldStatus;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "new_status")
-    private EventStatus newStatus;
+    @ToString.Exclude
+    @JoinColumn(name = "notification_id")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NotificationChangeEntity> fieldChanges;
 }
