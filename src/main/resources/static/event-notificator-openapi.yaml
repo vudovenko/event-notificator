@@ -10,6 +10,9 @@ servers:
 tags:
   - name: Notifications
 
+security:
+  - bearerAuth: []
+
 paths:
   /notifications:
     get:
@@ -17,8 +20,6 @@ paths:
       description: Получить все нотификации пользователя.
         ID пользователя и его роль должна извлекаться из JWT токена.
         JWT токен выдается другим сервисом - сервисом event-manager.
-      security:
-        - BearerAuth: []
       responses:
         '200':
           description: Успешно возвращается список нотификаций пользователя
@@ -47,8 +48,6 @@ paths:
         Если какая-то нотификация не найдена в БД по ID, то приложение должно игнорировать ее и не падать с ошибкой.
         ID пользователя и его роль должна извлекаться из JWT токена.
         JWT токен выдается другим сервисом - сервисом event-manager.
-      security:
-        - BearerAuth: []
       requestBody:
         required: true
         content:
