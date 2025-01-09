@@ -1,5 +1,6 @@
 package dev.vudovenko.eventnotificator.notifications.scheduler;
 
+import dev.vudovenko.eventnotificator.notificationAssignments.service.NotificationAssignmentService;
 import dev.vudovenko.eventnotificator.notifications.scheduler.services.OutdatedNotificationsService;
 import dev.vudovenko.eventnotificator.notifications.services.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 public class OutdatedNotificationsScheduler {
 
     private final OutdatedNotificationsService outdatedNotificationsService;
+    private final NotificationAssignmentService notificationAssignmentService;
     private final NotificationService notificationService;
 
     @Transactional
@@ -24,7 +26,7 @@ public class OutdatedNotificationsScheduler {
         log.info("Deleting outdated notifications");
 
         List<Long> IdsOutdatedNotifications = outdatedNotificationsService.getOutdatedNotificationIds();
-        outdatedNotificationsService.deleteOutdatedNotificationAssignments(IdsOutdatedNotifications);
+        notificationAssignmentService.deleteAllByNotificationIds(IdsOutdatedNotifications);
         notificationService.deleteAll(IdsOutdatedNotifications);
     }
 }

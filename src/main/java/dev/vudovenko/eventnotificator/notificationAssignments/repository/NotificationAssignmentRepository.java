@@ -27,5 +27,5 @@ public interface NotificationAssignmentRepository extends JpaRepository<Notifica
                     WHERE na.notificationId IN :notificationIds
                     """
     )
-    void deleteByNotificationIdIn(List<Long> notificationIds);
+    void deleteAllByNotificationIdIn(List<Long> notificationIds);
 }
