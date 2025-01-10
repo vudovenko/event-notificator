@@ -27,4 +27,9 @@ public class NotificationChangeServiceImpl implements NotificationChangeService 
                         .toList()
         );
     }
+
+    @Override
+    public void deleteAllByNotificationIds(List<Long> IdsOutdatedNotifications) {
+        notificationChangeRepository.deleteAllByNotificationIdIn(IdsOutdatedNotifications);
+    }
 }

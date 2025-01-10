@@ -9,4 +9,6 @@ import java.util.List;
 public interface NotificationChangeService {
 
     List<NotificationChangeEntity> saveNotificationChanges(Collection<NotificationChange> notificationChanges);
+
+    void deleteAllByNotificationIds(List<Long> IdsOutdatedNotifications);
 }
