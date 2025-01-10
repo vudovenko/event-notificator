@@ -1,16 +1,11 @@
 package dev.vudovenko.eventnotificator.notifications.scheduler;
 
-import dev.vudovenko.eventnotificator.notificationAssignments.service.NotificationAssignmentService;
-import dev.vudovenko.eventnotificator.notificationChanges.services.NotificationChangeService;
 import dev.vudovenko.eventnotificator.notifications.scheduler.services.OutdatedNotificationsService;
-import dev.vudovenko.eventnotificator.notifications.services.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Log4j2
 @Service
@@ -18,18 +13,12 @@ import java.util.List;
 public class OutdatedNotificationsScheduler {
 
     private final OutdatedNotificationsService outdatedNotificationsService;
-    private final NotificationAssignmentService notificationAssignmentService;
-    private final NotificationChangeService notificationChangeService;
-    private final NotificationService notificationService;
 
     @Transactional
     @Scheduled(fixedRateString = "${scheduler.notification.period.ISO}")
     public void deleteOutdatedNotifications() {
         log.info("Deleting outdated notifications");
 
-        List<Long> IdsOutdatedNotifications = outdatedNotificationsService.getOutdatedNotificationIds();
-        notificationAssignmentService.deleteAllByNotificationIds(IdsOutdatedNotifications);
-        notificationChangeService.deleteAllByNotificationIds(IdsOutdatedNotifications);
-        notificationService.deleteAll(IdsOutdatedNotifications);
+        outdatedNotificationsService.deleteOutdatedNotifications();
     }
 }

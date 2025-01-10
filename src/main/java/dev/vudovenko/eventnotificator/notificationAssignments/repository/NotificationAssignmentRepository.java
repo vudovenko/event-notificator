@@ -14,7 +14,7 @@ public interface NotificationAssignmentRepository extends JpaRepository<Notifica
             """
                     UPDATE NotificationAssignmentEntity na
                     SET na.isRead = true
-                    WHERE na.notificationId IN :notificationIds
+                    WHERE na.notification.id IN :notificationIds
                     AND na.userId = :userId
                     """
     )
@@ -24,7 +24,7 @@ public interface NotificationAssignmentRepository extends JpaRepository<Notifica
     @Query(
             """
                     DELETE NotificationAssignmentEntity na
-                    WHERE na.notificationId IN :notificationIds
+                    WHERE na.notification.id IN :notificationIds
                     """
     )
     void deleteAllByNotificationIdIn(List<Long> notificationIds);

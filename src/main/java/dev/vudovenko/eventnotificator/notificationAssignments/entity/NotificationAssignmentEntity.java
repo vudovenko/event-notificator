@@ -1,5 +1,6 @@
 package dev.vudovenko.eventnotificator.notificationAssignments.entity;
 
+import dev.vudovenko.eventnotificator.notifications.entities.NotificationEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,8 +18,9 @@ public class NotificationAssignmentEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "notification_id", nullable = false)
-    private Long notificationId;
+    @ManyToOne
+    @JoinColumn(name = "notification_id", referencedColumnName = "id", nullable = false)
+    private NotificationEntity notification;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;

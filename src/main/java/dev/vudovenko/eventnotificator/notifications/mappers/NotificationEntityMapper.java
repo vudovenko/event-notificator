@@ -13,10 +13,7 @@ import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -33,6 +30,7 @@ public class NotificationEntityMapper implements EntityMapper<Notification, Noti
                 notification.getModifiedBy(),
                 notification.getEventOwnerId(),
                 notification.getNotificationCreatedAt(),
+                Set.of(),
                 List.of()
         );
 
@@ -41,7 +39,7 @@ public class NotificationEntityMapper implements EntityMapper<Notification, Noti
         if (notification.getName() != null) {
             changes.add(
                     createChangeEntity(
-                            notificationEntity.getId(),
+                            notificationEntity,
                             FieldName.NAME,
                             notification.getName().oldField(),
                             notification.getName().newField()
@@ -53,7 +51,7 @@ public class NotificationEntityMapper implements EntityMapper<Notification, Noti
         if (notification.getMaxPlaces() != null) {
             changes.add(
                     createChangeEntity(
-                            notificationEntity.getId(),
+                            notificationEntity,
                             FieldName.MAX_PLACES,
                             notification.getMaxPlaces().oldField(),
                             notification.getMaxPlaces().newField()
@@ -65,7 +63,7 @@ public class NotificationEntityMapper implements EntityMapper<Notification, Noti
         if (notification.getDate() != null) {
             changes.add(
                     createChangeEntity(
-                            notificationEntity.getId(),
+                            notificationEntity,
                             FieldName.DATE,
                             notification.getDate().oldField(),
                             notification.getDate().newField()
@@ -77,7 +75,7 @@ public class NotificationEntityMapper implements EntityMapper<Notification, Noti
         if (notification.getCost() != null) {
             changes.add(
                     createChangeEntity(
-                            notificationEntity.getId(),
+                            notificationEntity,
                             FieldName.COST,
                             notification.getCost().oldField(),
                             notification.getCost().newField()
@@ -89,7 +87,7 @@ public class NotificationEntityMapper implements EntityMapper<Notification, Noti
         if (notification.getDuration() != null) {
             changes.add(
                     createChangeEntity(
-                            notificationEntity.getId(),
+                            notificationEntity,
                             FieldName.DURATION,
                             notification.getDuration().oldField(),
                             notification.getDuration().newField()
@@ -101,7 +99,7 @@ public class NotificationEntityMapper implements EntityMapper<Notification, Noti
         if (notification.getLocationId() != null) {
             changes.add(
                     createChangeEntity(
-                            notificationEntity.getId(),
+                            notificationEntity,
                             FieldName.LOCATION_ID,
                             notification.getLocationId().oldField(),
                             notification.getLocationId().newField()
@@ -113,7 +111,7 @@ public class NotificationEntityMapper implements EntityMapper<Notification, Noti
         if (notification.getStatus() != null) {
             changes.add(
                     createChangeEntity(
-                            notificationEntity.getId(),
+                            notificationEntity,
                             FieldName.STATUS,
                             notification.getStatus().oldField() != null
                                     ? notification.getStatus().oldField().name()
@@ -131,14 +129,14 @@ public class NotificationEntityMapper implements EntityMapper<Notification, Noti
     }
 
     private NotificationChangeEntity createChangeEntity(
-            Long notificationId,
+            NotificationEntity notificationEntity,
             FieldName fieldName,
             Object oldValue,
             Object newValue
     ) {
         return new NotificationChangeEntity(
                 null,
-                notificationId,
+                notificationEntity,
                 fieldName,
                 oldValue != null ? oldValue.toString() : null,
                 newValue != null ? newValue.toString() : null

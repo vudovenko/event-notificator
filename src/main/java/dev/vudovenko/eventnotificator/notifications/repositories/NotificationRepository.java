@@ -16,18 +16,19 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
                     SELECT n
                     FROM NotificationAssignmentEntity na
                     LEFT JOIN NotificationEntity n
-                    ON na.notificationId = n.id
+                    ON na.notification.id = n.id
                     WHERE na.userId = :userId AND na.isRead = false
                     """
     )
     List<NotificationEntity> getUnreadNotificationsByUserId(Long userId);
 
+    @EntityGraph(value = "notification-with-assignments-and-changes")
     @Query(
             """
-                    SELECT n.id
+                    SELECT n
                     FROM NotificationEntity n
                     WHERE n.notificationCreatedAt < :retentionPeriodForNotifications
                     """
     )
-    List<Long> getIdsOutdatedNotifications(LocalDateTime retentionPeriodForNotifications);
+    List<NotificationEntity> getOutdatedNotifications(LocalDateTime retentionPeriodForNotifications);
 }

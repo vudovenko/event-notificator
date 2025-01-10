@@ -13,7 +13,7 @@ public interface NotificationChangeRepository extends JpaRepository<Notification
     @Query(
             """
             DELETE NotificationChangeEntity nc
-            WHERE nc.notificationId IN :idsOutdatedNotifications
+            WHERE nc.notification.id IN :idsOutdatedNotifications
             """
     )
     void deleteAllByNotificationIdIn(List<Long> idsOutdatedNotifications);

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class OutdatedNotificationsServiceImpl implements OutdatedNotificationsService {
@@ -24,9 +23,16 @@ public class OutdatedNotificationsServiceImpl implements OutdatedNotificationsSe
     }
 
     @Override
-    public List<Long> getOutdatedNotificationIds() {
+    public void deleteOutdatedNotifications() {
+        LocalDateTime retentionPeriodForNotifications = getRetentionPeriodForNotifications();
+
+        notificationRepository.deleteAll(
+                notificationRepository.getOutdatedNotifications(retentionPeriodForNotifications)
+        );
+    }
+
+    private LocalDateTime getRetentionPeriodForNotifications() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime retentionPeriodForNotifications = now.minusDays(notificationTtlInDays);
-        return notificationRepository.getIdsOutdatedNotifications(retentionPeriodForNotifications);
+        return now.minusDays(notificationTtlInDays);
     }
 }

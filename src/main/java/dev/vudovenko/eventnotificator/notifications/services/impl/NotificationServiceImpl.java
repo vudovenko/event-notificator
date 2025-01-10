@@ -2,9 +2,6 @@ package dev.vudovenko.eventnotificator.notifications.services.impl;
 
 import dev.vudovenko.eventnotificator.common.mappers.EntityMapper;
 import dev.vudovenko.eventnotificator.notificationAssignments.repository.NotificationAssignmentRepository;
-import dev.vudovenko.eventnotificator.notificationChanges.domain.NotificationChange;
-import dev.vudovenko.eventnotificator.notificationChanges.entity.NotificationChangeEntity;
-import dev.vudovenko.eventnotificator.notificationChanges.services.NotificationChangeService;
 import dev.vudovenko.eventnotificator.notifications.domain.Notification;
 import dev.vudovenko.eventnotificator.notifications.entities.NotificationEntity;
 import dev.vudovenko.eventnotificator.notifications.repositories.NotificationRepository;
@@ -19,31 +16,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
 
-    private final NotificationChangeService notificationChangeService;
-
     private final NotificationRepository notificationRepository;
     private final NotificationAssignmentRepository notificationAssignmentRepository;
 
     private final EntityMapper<Notification, NotificationEntity> notificationEntityMapper;
-    private final EntityMapper<NotificationChange, NotificationChangeEntity> notificationChangeEntityMapper;
 
     @Override
     public Notification createNotification(Notification notification) {
-        NotificationEntity notificationEntityToSave = notificationEntityMapper.toEntity(notification);
-        List<NotificationChangeEntity> fieldChanges = notificationEntityToSave.getFieldChanges();
-        notificationEntityToSave.setFieldChanges(List.of());
-        NotificationEntity notificationEntity = notificationRepository.save(notificationEntityToSave);
-
-        fieldChanges
-                .forEach(fieldChange -> fieldChange.setNotificationId(notificationEntity.getId()));
-
-        List<NotificationChangeEntity> notificationChangeEntities = notificationChangeService.saveNotificationChanges(
-                fieldChanges.stream()
-                        .map(notificationChangeEntityMapper::toDomain)
-                        .toList()
+        NotificationEntity notificationEntity = notificationRepository.save(
+                notificationEntityMapper.toEntity(notification)
         );
-
-        notificationEntity.setFieldChanges(notificationChangeEntities);
 
         return notificationEntityMapper.toDomain(notificationEntity);
     }

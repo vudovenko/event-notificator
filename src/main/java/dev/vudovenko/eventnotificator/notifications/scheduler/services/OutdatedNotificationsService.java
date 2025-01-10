@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface OutdatedNotificationsService {
 
-    List<Long> getOutdatedNotificationIds();
+    void deleteOutdatedNotifications();
 }

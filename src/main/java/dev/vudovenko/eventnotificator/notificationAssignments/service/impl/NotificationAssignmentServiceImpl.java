@@ -3,6 +3,7 @@ package dev.vudovenko.eventnotificator.notificationAssignments.service.impl;
 import dev.vudovenko.eventnotificator.notificationAssignments.entity.NotificationAssignmentEntity;
 import dev.vudovenko.eventnotificator.notificationAssignments.repository.NotificationAssignmentRepository;
 import dev.vudovenko.eventnotificator.notificationAssignments.service.NotificationAssignmentService;
+import dev.vudovenko.eventnotificator.notifications.entities.NotificationEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,15 @@ public class NotificationAssignmentServiceImpl implements NotificationAssignment
     public void assignNotification(Long notificationId, Long userId) {
         NotificationAssignmentEntity notificationAssignment = new NotificationAssignmentEntity(
                 null,
-                notificationId,
+                new NotificationEntity(
+                        notificationId,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                ),
                 userId,
                 false
         );

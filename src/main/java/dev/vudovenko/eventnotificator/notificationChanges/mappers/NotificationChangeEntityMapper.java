@@ -15,7 +15,7 @@ public class NotificationChangeEntityMapper
     public NotificationChange toDomain(NotificationChangeEntity notificationChangeEntity) {
         return new NotificationChange(
                 notificationChangeEntity.getId(),
-                notificationChangeEntity.getNotificationId(),
+                null,
                 notificationChangeEntity.getFieldName(),
                 notificationChangeEntity.getOldValue(),
                 notificationChangeEntity.getNewValue()
@@ -26,7 +26,7 @@ public class NotificationChangeEntityMapper
     public NotificationChangeEntity toEntity(NotificationChange notificationChange) {
         return new NotificationChangeEntity(
                 notificationChange.getId(),
-                notificationChange.getNotificationId(),
+                null,
                 notificationChange.getFieldName(),
                 notificationChange.getOldValue(),
                 notificationChange.getNewValue()

@@ -1,6 +1,7 @@
 package dev.vudovenko.eventnotificator.notificationChanges.entity;
 
 import dev.vudovenko.eventnotificator.notificationChanges.fieldNames.FieldName;
+import dev.vudovenko.eventnotificator.notifications.entities.NotificationEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,8 +19,9 @@ public class NotificationChangeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "notification_id", nullable = false)
-    private Long notificationId;
+    @ManyToOne
+    @JoinColumn(name = "notification_id", referencedColumnName = "id", nullable = false)
+    private NotificationEntity notification;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "field_name", nullable = false)

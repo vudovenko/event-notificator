@@ -1,5 +1,6 @@
 package dev.vudovenko.eventnotificator.notificationAssignments.domain;
 
+import dev.vudovenko.eventnotificator.notifications.domain.Notification;
 import lombok.*;
 
 @Getter
@@ -11,7 +12,7 @@ import lombok.*;
 public class NotificationAssignment {
 
     private Long id;
-    private Long notificationId;
+    private Notification notification;
     private Long userId;
     private Boolean isRead;
 }
