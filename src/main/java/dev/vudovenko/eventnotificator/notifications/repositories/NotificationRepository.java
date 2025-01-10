@@ -15,6 +15,7 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
                     FROM NotificationAssignmentEntity na
                     LEFT JOIN NotificationEntity n
                     ON na.notificationId = n.id
+                    LEFT JOIN FETCH n.fieldChanges
                     WHERE na.userId = :userId AND na.isRead = false
                     """
     )
